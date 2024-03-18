@@ -60,6 +60,12 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      gradients: {
+        "zinc-gradient": [
+          "your-gradient-start-color",
+          "your-gradient-end-color",
+        ],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

@@ -1,9 +1,9 @@
-import { Button } from "../ui/button";
+import HeroButton from "./HeroButton";
 
 export default function Hero() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-y-8">
-      <div className="max-w-[50%] text-center text-6xl font-bold text-zinc-200">
+    <div className="flex flex-grow flex-col items-center justify-center gap-y-8">
+      <div className="heading-gradient max-w-[50%] text-center text-6xl font-bold">
         Comparing{" "}
         <span className="to-danger bg-gradient-to-r from-purple-500 to-purple-700 bg-clip-text text-transparent">
           client
@@ -17,12 +17,7 @@ export default function Hero() {
           Nextjs
         </span>{" "}
       </div>
-      <Button
-        variant="outline"
-        className="bg-zinc-200 text-2xl font-semibold text-zinc-950 ring-2 ring-zinc-200 transition-all duration-300 hover:bg-zinc-950 hover:text-zinc-200 hover:ring-zinc-200"
-      >
-        Start testing...
-      </Button>
+      <HeroButton></HeroButton>
     </div>
   );
 }
