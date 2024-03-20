@@ -63,7 +63,12 @@ export default function FormClientAverage() {
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const file = e.target.files[0];
+    const maxSize = 1 * 1024 * 1024; // 1MB in bytes
     if (file) {
+      if (file.size > maxSize) {
+        alert("File size should not exceed 1MB");
+        return;
+      }
       setImageData(file);
       setPreviewImage(URL.createObjectURL(file));
       setFileName(file.name);
@@ -180,9 +185,11 @@ export default function FormClientAverage() {
               type="file"
               className="absolute inset-0 cursor-pointer opacity-0"
               onChange={(e) => handleFileChange(e)}
+              accept="image/*"
             />
             <p>{!previewImage ? "Upload Image" : "Change Image"}</p>
             <File />
+            <p className="text-zinc-400">Max Size: 1MB</p>
           </div>
           {previewImage && (
             <Image

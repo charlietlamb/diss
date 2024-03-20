@@ -8,7 +8,7 @@ import { appData } from "./data/appData";
 export default function App() {
   const { mode } = useAppSelector((state) => state.render);
   return (
-    <div className="flex flex-col gap-y-4 py-8">
+    <div className="flex flex-grow flex-col gap-y-4 py-8">
       <AppHeading></AppHeading>
       <BentoGrid className="mx-auto max-w-4xl">
         {appData.map((item, i) => (

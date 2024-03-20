@@ -1,5 +1,10 @@
-import FormServer from "@/components/form/FormServer";
+import FormServer from "@/components/form/server/FormServer";
+import FormServerWrap from "@/components/form/server/FormServerWrap";
 
 export default function page() {
-  return <FormServer></FormServer>;
+  return (
+    <FormServerWrap>
+      <FormServer />
+    </FormServerWrap>
+  );
 }

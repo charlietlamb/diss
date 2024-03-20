@@ -1,18 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { setComplexity } from "@/state/render/renderSlice";
-import { RootState } from "@/state/store";
+import { useAppDispatch } from "@/state/hooks";
 import { Apple, Coffee, Soup } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useEffect, useState } from "react";
+import { useLocalStorage } from "../app/hooks/useLocalStorage";
 
 type ComplexityLevel = "simple" | "average" | "complex";
 const iconMap: Record<ComplexityLevel, JSX.Element> = {
@@ -22,10 +21,19 @@ const iconMap: Record<ComplexityLevel, JSX.Element> = {
 };
 
 export default function Complexity() {
-  const { complexity } = useAppSelector((state: RootState) => state.render);
   const complexities: ComplexityLevel[] = ["simple", "average", "complex"];
-  const dispatch = useAppDispatch();
+  const stg = useLocalStorage("complexity");
+  const [complexity, setComplexity] = useState<ComplexityLevel>(() => {
+    return (stg.getItem() as ComplexityLevel) || "simple";
+  });
   const pathname = usePathname();
+  const router = useRouter();
+  let server = false;
+  if (pathname.includes("server")) server = true;
+
+  useEffect(() => {
+    stg.setItem(complexity);
+  }, [complexity, server, router, pathname, stg]);
   if (pathname === "/app") return null;
   return (
     <div className="relative z-50 flex min-h-full flex-col justify-start gap-y-8 border-r border-zinc-700">
@@ -38,8 +46,12 @@ export default function Complexity() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={() => dispatch(setComplexity(c))}
+                  onClick={() => {
+                    setComplexity(c);
+                    if (server) router.refresh();
+                  }}
                   variant="zinc_outline"
+                  className={complexity === c ? "border-zinc-200" : ""}
                 >
                   {iconMap[c]}
                 </Button>
