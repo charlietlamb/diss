@@ -1,17 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useAppDispatch } from "@/state/hooks";
 import { Apple, Coffee, Soup } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useEffect, useState } from "react";
-import { useLocalStorage } from "../app/hooks/useLocalStorage";
 
 type ComplexityLevel = "simple" | "average" | "complex";
 const iconMap: Record<ComplexityLevel, JSX.Element> = {
@@ -22,18 +19,10 @@ const iconMap: Record<ComplexityLevel, JSX.Element> = {
 
 export default function Complexity() {
   const complexities: ComplexityLevel[] = ["simple", "average", "complex"];
-  const stg = useLocalStorage("complexity");
-  const [complexity, setComplexity] = useState<ComplexityLevel>(() => {
-    return (stg.getItem() as ComplexityLevel) || "simple";
-  });
+  const { method, render, complexity } = useParams();
   const pathname = usePathname();
   const router = useRouter();
-  let server = false;
-  if (pathname.includes("server")) server = true;
 
-  useEffect(() => {
-    stg.setItem(complexity);
-  }, [complexity, server, router, pathname, stg]);
   if (pathname === "/app") return null;
   return (
     <div className="relative z-50 flex min-h-full flex-col justify-start gap-y-8 border-r border-zinc-700">
@@ -47,8 +36,9 @@ export default function Complexity() {
               <TooltipTrigger asChild>
                 <Button
                   onClick={() => {
-                    setComplexity(c);
-                    if (server) router.refresh();
+                    if (c !== complexity) {
+                      router.push(`/app/${method}/${render}/${c}`);
+                    }
                   }}
                   variant="zinc_outline"
                   className={complexity === c ? "border-zinc-200" : ""}

@@ -11,7 +11,7 @@ import { File } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-export default function FormClientComplex() {
+export default function FormHybridComplex() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -109,7 +109,7 @@ export default function FormClientComplex() {
   return (
     <div className="relative z-50 flex  flex-grow  flex-col gap-y-4 overflow-y-auto rounded-lg px-4 py-8">
       <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-left text-6xl font-bold text-transparent">
-        Client Side Form: Complex
+        Hybrid Form: Complex
       </h1>
       <div className="flex flex-col gap-y-4">
         <div className="flex flex-col gap-y-2">

@@ -12,7 +12,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { decode } from "base64-arraybuffer";
 
-export default function FormClientAverage() {
+export default function FormHybridAverage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -80,7 +80,7 @@ export default function FormClientAverage() {
   return (
     <div className="relative z-50 flex  flex-grow  flex-col gap-y-4 overflow-y-auto rounded-lg px-4 py-8">
       <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-left text-6xl font-bold text-transparent">
-        Client Side Form: Average
+        Hybrid Form: Average
       </h1>
       <div className="flex flex-col gap-y-4">
         <div className="flex flex-col gap-y-2">

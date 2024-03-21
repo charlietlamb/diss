@@ -5,10 +5,10 @@ import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { Textarea } from "../../ui/textarea";
-import { toast } from "sonner";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { toast } from "sonner";
 
-export default function FormClientSimple() {
+export default function FormHybrid() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -30,6 +30,7 @@ export default function FormClientSimple() {
       toast("Submit time: " + Math.round(timeTaken) + "ms", { icon: "📤" });
     }, 1000);
   }
+
   useEffect(() => {
     const startTime = performance.now();
     setLoadTime(startTime);
@@ -40,10 +41,11 @@ export default function FormClientSimple() {
     const timeTaken = endTime - loadTime;
     toast("Initial load time: " + Math.round(timeTaken) + "ms", { icon: "🕰" });
   }, [loadTime]);
+
   return (
-    <div className="relative z-50 flex  flex-grow  flex-col gap-y-4 overflow-y-auto rounded-lg px-4 py-8">
+    <div className="relative z-50 flex  flex-col  gap-y-4 rounded-lg  px-4 py-8">
       <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-left text-6xl font-bold text-transparent">
-        Client Side Form: Simple
+        Hybrid Form
       </h1>
       <div className="flex flex-col gap-y-4">
         <div className="flex flex-col gap-y-2">

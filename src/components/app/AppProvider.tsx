@@ -18,11 +18,9 @@ export default function AppProvider({
   const pathname = usePathname();
   const type = pathname.split("/")[2];
   const currentMode = pathname.split("/")[3];
+  const currentComplexity = pathname.split("/")[4];
   const dispatch = useAppDispatch();
   const [init, setInit] = useState(false);
-  // if (currentMode) {
-  //   dispatch(setMode(currentMode));
-  // }
   const navItems = [
     {
       name: "Client",
@@ -47,10 +45,14 @@ export default function AppProvider({
   useEffect(() => {
     console.log("trying to change mode to ", mode);
     if (mode !== currentMode && type && init) {
-      router.push(`/app/${type}/${mode}`);
+      if (currentComplexity) {
+        router.push(`/app/${type}/${mode}/${currentComplexity}`);
+      } else {
+        router.push(`/app/${type}/${mode}`);
+      }
       toast(`Successfully switched to ${mode} rendering`, { icon: "🚀" });
     }
-  }, [mode, router, type, currentMode, init]);
+  }, [mode, router, type, currentMode, init, currentComplexity]);
   return (
     <>
       {children}

@@ -17,9 +17,9 @@ export default function NavBar() {
       </Link>
       <menu className="flex gap-x-4">
         <NavItem text="App" href="/app"></NavItem>
-        <NavItem text="Form" href={`/app/form/${mode}`}></NavItem>
-        <NavItem text="Charts" href={`/app/charts/${mode}`}></NavItem>
-        <NavItem text="Data" href={`/app/data/${mode}`}></NavItem>
+        <NavItem text="Form" href={`/app/form/${mode}/simple`}></NavItem>
+        <NavItem text="Charts" href={`/app/charts/${mode}/simple`}></NavItem>
+        <NavItem text="Data" href={`/app/data/${mode}/simple`}></NavItem>
       </menu>
     </div>
   );
