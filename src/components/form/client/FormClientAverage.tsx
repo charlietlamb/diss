@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
@@ -10,7 +10,8 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { File } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { decode } from "base64-arraybuffer";
+import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import { setRequests } from "@/state/cache/cacheSlice";
 
 export default function FormClientAverage() {
   const [name, setName] = useState("");
@@ -26,6 +27,9 @@ export default function FormClientAverage() {
   const [fileName, setFileName] = useState<string | null>(null);
   const [loadTime, setLoadTime] = useState(0);
   const supabase = createClientComponentClient<Database>();
+  const { requests } = useAppSelector((state) => state.cache);
+  const dispatch = useAppDispatch();
+  const [init, setInit] = useState(false);
   async function submitButton() {
     if (
       !name ||
@@ -49,8 +53,26 @@ export default function FormClientAverage() {
 
     const timeTaken = performance.now() - startTime;
     toast("Form submitted successfully", { icon: "🚀" });
+    const loadData = {
+      render: "client",
+      complexity: "average",
+      time: timeTaken,
+      cached: requests.includes("submit/client/average"),
+    };
+    const { error: submitError } = await supabase
+      .from("submissions")
+      .insert(loadData);
+    if (submitError) throw submitError;
+    if (!loadData.cached) {
+      dispatch(setRequests([...requests, "submit/client/average"]));
+    }
     setTimeout(() => {
-      toast("Submit time: " + Math.round(timeTaken) + "ms", { icon: "📤" });
+      toast("Submit time: " + Math.round(timeTaken) + "ms", {
+        icon: "📤",
+        description: loadData.cached
+          ? "This request was previously cached"
+          : "This request was not cached",
+      });
     }, 1000);
   }
   useEffect(() => {
@@ -73,9 +95,30 @@ export default function FormClientAverage() {
   };
 
   useEffect(() => {
-    const endTime = performance.now();
-    const timeTaken = endTime - loadTime;
-    toast("Initial load time: " + Math.round(timeTaken) + "ms", { icon: "🕰" });
+    async function getTime() {
+      if (!init) return setInit(true);
+      const endTime = performance.now();
+      const timeTaken = endTime - loadTime;
+      const loadData = {
+        method: "form",
+        render: "client",
+        complexity: "average",
+        time: timeTaken,
+        cached: requests.includes("form/client/average"),
+      };
+      toast("Initial load time: " + Math.round(timeTaken) + "ms", {
+        icon: "🕰",
+        description: loadData.cached
+          ? "This page was previously cached"
+          : "This page was not cached",
+      });
+      const { error } = await supabase.from("loads").insert(loadData);
+      if (error) throw error;
+      if (!loadData.cached) {
+        dispatch(setRequests([...requests, "form/client/average"]));
+      }
+    }
+    getTime();
   }, [loadTime]);
   return (
     <div className="relative z-50 flex  flex-grow  flex-col gap-y-4 overflow-y-auto rounded-lg px-4 py-8">

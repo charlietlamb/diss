@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import renderSlice from "./render/renderSlice";
+import cacheSlice from "./cache/cacheSlice";
 export const makeStore = () => {
   return configureStore({
     reducer: {
       render: renderSlice,
+      cache: cacheSlice,
     },
   });
 };

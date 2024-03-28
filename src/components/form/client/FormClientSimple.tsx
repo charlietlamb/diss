@@ -7,13 +7,18 @@ import { Label } from "../../ui/label";
 import { Textarea } from "../../ui/textarea";
 import { toast } from "sonner";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import { setRequests } from "@/state/cache/cacheSlice";
 
 export default function FormClientSimple() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loadTime, setLoadTime] = useState(0);
+  const [init, setInit] = useState(false);
   const supabase = createClientComponentClient<Database>();
+  const { requests } = useAppSelector((state) => state.cache);
+  const dispatch = useAppDispatch();
   async function submitButton() {
     console.log("clicked");
     if (!name || !email || !message)
@@ -26,8 +31,26 @@ export default function FormClientSimple() {
     if (error) throw error;
     const timeTaken = performance.now() - startTime;
     toast("Form submitted successfully", { icon: "🚀" });
+    const loadData = {
+      render: "client",
+      complexity: "simple",
+      time: timeTaken,
+      cached: requests.includes("submit/client/simple"),
+    };
+    const { error: submitError } = await supabase
+      .from("submissions")
+      .insert(loadData);
+    if (submitError) throw submitError;
+    if (!loadData.cached) {
+      dispatch(setRequests([...requests, "submit/client/simple"]));
+    }
     setTimeout(() => {
-      toast("Submit time: " + Math.round(timeTaken) + "ms", { icon: "📤" });
+      toast("Submit time: " + Math.round(timeTaken) + "ms", {
+        icon: "📤",
+        description: loadData.cached
+          ? "This request was previously cached"
+          : "This request was not cached",
+      });
     }, 1000);
   }
   useEffect(() => {
@@ -36,9 +59,30 @@ export default function FormClientSimple() {
   }, []);
 
   useEffect(() => {
-    const endTime = performance.now();
-    const timeTaken = endTime - loadTime;
-    toast("Initial load time: " + Math.round(timeTaken) + "ms", { icon: "🕰" });
+    async function getTime() {
+      if (!init) return setInit(true);
+      const endTime = performance.now();
+      const timeTaken = endTime - loadTime;
+      const loadData = {
+        method: "form",
+        render: "client",
+        complexity: "simple",
+        time: timeTaken,
+        cached: requests.includes("form/client/simple"),
+      };
+      toast("Initial load time: " + Math.round(timeTaken) + "ms", {
+        icon: "🕰",
+        description: loadData.cached
+          ? "This page was previously cached"
+          : "This page was not cached",
+      });
+      const { error } = await supabase.from("loads").insert(loadData);
+      if (error) throw error;
+      if (!loadData.cached) {
+        dispatch(setRequests([...requests, "form/client/simple"]));
+      }
+    }
+    getTime();
   }, [loadTime]);
   return (
     <div className="relative z-50 flex  flex-grow  flex-col gap-y-4 overflow-y-auto rounded-lg px-4 py-8">

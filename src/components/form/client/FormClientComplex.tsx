@@ -10,6 +10,8 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { File } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import { setRequests } from "@/state/cache/cacheSlice";
 
 export default function FormClientComplex() {
   const [name, setName] = useState("");
@@ -23,8 +25,10 @@ export default function FormClientComplex() {
   const [previewImage3, setPreviewImage3] = useState<string | null>(null);
   const [loadTime, setLoadTime] = useState(0);
   const supabase = createClientComponentClient<Database>();
+  const { requests } = useAppSelector((state) => state.cache);
+  const dispatch = useAppDispatch();
+  const [init, setInit] = useState(false);
   async function submitButton() {
-    console.log("clicked");
     if (!name || !email || !message || !file || !file2 || !file3)
       return toast("Please fill in all fields", { icon: "🚫" });
 
@@ -36,25 +40,43 @@ export default function FormClientComplex() {
     const { error: fileError } = await supabase.storage
       .from("images")
       .upload(`public/${file.name}`, file, {
-        contentType: "image",
+        upsert: true,
       });
     if (fileError) throw fileError;
     const { error: fileError2 } = await supabase.storage
       .from("images")
       .upload(`public/${file2.name}`, file2, {
-        contentType: "image",
+        upsert: true,
       });
     if (fileError2) throw fileError2;
     const { error: fileError3 } = await supabase.storage
       .from("images")
       .upload(`public/${file3.name}`, file3, {
-        contentType: "image",
+        upsert: true,
       });
     if (fileError3) throw fileError3;
     const timeTaken = performance.now() - startTime;
     toast("Form submitted successfully", { icon: "🚀" });
+    const loadData = {
+      render: "client",
+      complexity: "complex",
+      time: timeTaken,
+      cached: requests.includes("submit/client/complex"),
+    };
+    const { error: submitError } = await supabase
+      .from("submissions")
+      .insert(loadData);
+    if (submitError) throw submitError;
+    if (!loadData.cached) {
+      dispatch(setRequests([...requests, "submit/client/complex"]));
+    }
     setTimeout(() => {
-      toast("Submit time: " + Math.round(timeTaken) + "ms", { icon: "📤" });
+      toast("Submit time: " + Math.round(timeTaken) + "ms", {
+        icon: "📤",
+        description: loadData.cached
+          ? "This request was previously cached"
+          : "This request was not cached",
+      });
     }, 1000);
   }
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -102,9 +124,30 @@ export default function FormClientComplex() {
   }, []);
 
   useEffect(() => {
-    const endTime = performance.now();
-    const timeTaken = endTime - loadTime;
-    toast("Initial load time: " + Math.round(timeTaken) + "ms", { icon: "🕰" });
+    async function getTime() {
+      if (!init) return setInit(true);
+      const endTime = performance.now();
+      const timeTaken = endTime - loadTime;
+      const loadData = {
+        method: "form",
+        render: "client",
+        complexity: "complex",
+        time: timeTaken,
+        cached: requests.includes("form/client/complex"),
+      };
+      toast("Initial load time: " + Math.round(timeTaken) + "ms", {
+        icon: "🕰",
+        description: loadData.cached
+          ? "This page was previously cached"
+          : "This page was not cached",
+      });
+      const { error } = await supabase.from("loads").insert(loadData);
+      if (error) throw error;
+      if (!loadData.cached) {
+        dispatch(setRequests([...requests, "form/client/complex"]));
+      }
+    }
+    getTime();
   }, [loadTime]);
   return (
     <div className="relative z-50 flex  flex-grow  flex-col gap-y-4 overflow-y-auto rounded-lg px-4 py-8">
