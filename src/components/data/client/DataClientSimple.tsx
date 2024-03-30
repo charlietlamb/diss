@@ -80,7 +80,6 @@ export default function DataClientSimple() {
       };
 
       await updateChart();
-      if (!init) return setInit(true);
       const endTime = performance.now();
       const timeTaken = endTime - startTime;
       const loadData = {

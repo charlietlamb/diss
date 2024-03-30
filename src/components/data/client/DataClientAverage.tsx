@@ -72,23 +72,22 @@ export default function DataClientAverage() {
         await path
           .data(layers)
           .transition()
-          .delay(1000)
+          .delay(500)
           .duration(1500)
           .attr("d", area as any)
           .end();
-        setTimeout(updateChart, 2500);
+        setTimeout(updateChart, 1000);
       };
 
       await updateChart();
-      if (!init) return setInit(true);
       const endTime = performance.now();
       const timeTaken = endTime - startTime;
       const loadData = {
         method: "data",
         render: "client",
-        complexity: "simple",
+        complexity: "average",
         time: timeTaken,
-        cached: requests.includes("data/client/simple"),
+        cached: requests.includes("data/client/average"),
       };
       toast("Initial load time: " + Math.round(timeTaken) + "ms", {
         icon: "🕰",
@@ -99,7 +98,7 @@ export default function DataClientAverage() {
       const { error } = await supabase.from("loads").insert(loadData);
       if (error) throw error;
       if (!loadData.cached) {
-        dispatch(setRequests([...requests, "data/client/simple"]));
+        dispatch(setRequests([...requests, "data/client/average"]));
       }
     }
     getData();

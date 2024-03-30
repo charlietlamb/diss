@@ -1,7 +1,9 @@
+import ServerWrap from "@/components/ServerWrap";
 import * as d3 from "d3";
 import { JSDOM } from "jsdom";
 
 export default async function DataServerAverage() {
+  const startTime = performance.now();
   const width = 960;
   const height = 500;
   const n = 10;
@@ -59,19 +61,30 @@ export default async function DataServerAverage() {
   }
 
   const svgHtml = generateSvg();
-
+  await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/toast`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      time: performance.now() - startTime,
+      key: "data/server/average",
+    }),
+  });
   return (
-    <div className="flex h-full min-h-full w-full flex-col gap-4 p-4">
-      <div className="flex flex-col items-center">
-        <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-center text-6xl font-bold text-transparent">
-          Server Side Data: Average
-        </h1>
-        <h2 className="font-xl text-zinc-400">
-          10 Layers, 50 Samples, 5 Bumps
-        </h2>
-        <div dangerouslySetInnerHTML={{ __html: svgHtml }} />
+    <ServerWrap>
+      <div className="flex h-full min-h-full w-full flex-col gap-4 p-4">
+        <div className="flex flex-col items-center">
+          <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-center text-6xl font-bold text-transparent">
+            Server Side Data: Average
+          </h1>
+          <h2 className="font-xl text-zinc-400">
+            10 Layers, 50 Samples, 5 Bumps
+          </h2>
+          <div dangerouslySetInnerHTML={{ __html: svgHtml }} />
+        </div>
       </div>
-    </div>
+    </ServerWrap>
   );
 }
 
