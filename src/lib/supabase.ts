@@ -56,28 +56,37 @@ export type Database = {
           cached: boolean
           complexity: string
           created_at: string
+          fcp: number | null
           id: string
+          lcp: number | null
           method: string
           render: string
           time: number
+          ttfb: number | null
         }
         Insert: {
           cached?: boolean
           complexity?: string
           created_at?: string
+          fcp?: number | null
           id?: string
+          lcp?: number | null
           method?: string
           render?: string
           time?: number
+          ttfb?: number | null
         }
         Update: {
           cached?: boolean
           complexity?: string
           created_at?: string
+          fcp?: number | null
           id?: string
+          lcp?: number | null
           method?: string
           render?: string
           time?: number
+          ttfb?: number | null
         }
         Relationships: []
       }

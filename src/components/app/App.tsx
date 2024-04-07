@@ -17,7 +17,7 @@ export default function App() {
             title={item.title}
             description={item.description}
             header={item.header}
-            href={item.href + "/" + mode + "/simple"}
+            href={item.href}
             icon={item.icon}
             className={i === 3 || i === 6 ? "md:col-span-2" : ""}
           />

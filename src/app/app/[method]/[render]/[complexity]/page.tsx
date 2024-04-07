@@ -1,3 +1,4 @@
+import { WebVitals } from "@/components/performance/WebVitals";
 import { pageMap } from "@/data/app/pageMap";
 import { redirect } from "next/navigation";
 
@@ -12,5 +13,10 @@ export default function page({
     ["simple", "average", "complex"].indexOf(params.complexity) === -1
   )
     return redirect("/app");
-  return pageMap.get(params.method)?.get(params.render)?.get(params.complexity);
+  return (
+    <>
+      {pageMap.get(params.method)?.get(params.render)?.get(params.complexity)}
+      <WebVitals />
+    </>
+  );
 }

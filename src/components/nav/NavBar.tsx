@@ -20,6 +20,8 @@ export default function NavBar() {
         <NavItem text="Form" href={`/app/form/${mode}/simple`}></NavItem>
         <NavItem text="Charts" href={`/app/charts/${mode}/simple`}></NavItem>
         <NavItem text="Data" href={`/app/data/${mode}/simple`}></NavItem>
+        <NavItem text="Results" href={`/results/form/client/simple`}></NavItem>
+        <NavItem text="Compare Tests" href={`/compare`}></NavItem>
       </menu>
     </div>
   );

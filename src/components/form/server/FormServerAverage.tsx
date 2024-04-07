@@ -44,7 +44,7 @@ export default async function FormServerAverage() {
     },
     body: JSON.stringify({
       time: performance.now() - startTime,
-      key: "forms/server/average",
+      key: "form/server/average",
     }),
   });
   return (

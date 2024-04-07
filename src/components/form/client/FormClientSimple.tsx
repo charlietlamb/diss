@@ -11,16 +11,13 @@ import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import { setRequests } from "@/state/cache/cacheSlice";
 
 export default function FormClientSimple() {
+  const supabase = createClientComponentClient<Database>();
+  const { requests } = useAppSelector((state) => state.cache);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [loadTime, setLoadTime] = useState(0);
-  const [init, setInit] = useState(false);
-  const supabase = createClientComponentClient<Database>();
-  const { requests } = useAppSelector((state) => state.cache);
   const dispatch = useAppDispatch();
   async function submitButton() {
-    console.log("clicked");
     if (!name || !email || !message)
       return toast("Please fill in all fields", { icon: "🚫" });
 
@@ -32,13 +29,14 @@ export default function FormClientSimple() {
     const timeTaken = performance.now() - startTime;
     toast("Form submitted successfully", { icon: "🚀" });
     const loadData = {
+      method: "submit",
       render: "client",
       complexity: "simple",
       time: timeTaken,
       cached: requests.includes("submit/client/simple"),
     };
     const { error: submitError } = await supabase
-      .from("submissions")
+      .from("loads")
       .insert(loadData);
     if (submitError) throw submitError;
     if (!loadData.cached) {
@@ -53,37 +51,7 @@ export default function FormClientSimple() {
       });
     }, 1000);
   }
-  useEffect(() => {
-    const startTime = performance.now();
-    setLoadTime(startTime);
-  }, []);
 
-  useEffect(() => {
-    async function getTime() {
-      if (!init) return setInit(true);
-      const endTime = performance.now();
-      const timeTaken = endTime - loadTime;
-      const loadData = {
-        method: "form",
-        render: "client",
-        complexity: "simple",
-        time: timeTaken,
-        cached: requests.includes("form/client/simple"),
-      };
-      toast("Initial load time: " + Math.round(timeTaken) + "ms", {
-        icon: "🕰",
-        description: loadData.cached
-          ? "This page was previously cached"
-          : "This page was not cached",
-      });
-      const { error } = await supabase.from("loads").insert(loadData);
-      if (error) throw error;
-      if (!loadData.cached) {
-        dispatch(setRequests([...requests, "form/client/simple"]));
-      }
-    }
-    getTime();
-  }, [loadTime]);
   return (
     <div className="relative z-50 flex  flex-grow  flex-col gap-y-4 overflow-y-auto rounded-lg px-4 py-8">
       <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-left text-6xl font-bold text-transparent">

@@ -7,6 +7,7 @@ let data: {
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const body = await req.json();
+  console.log("---BODY---");
   console.log(body);
   data = body;
   return NextResponse.json(data);
@@ -14,9 +15,4 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
 export function GET(req: NextRequest, res: NextResponse) {
   return NextResponse.json(data);
-}
-
-// Add this function to clear data when the server restarts
-export function UNLOAD() {
-  data = null;
 }

@@ -8,6 +8,7 @@ import { setRequests } from "@/state/cache/cacheSlice";
 import { toast } from "sonner";
 
 export default function DataClientSimple() {
+  const startTime = performance.now();
   const svgRef = useRef<SVGSVGElement>(null);
   const supabase = createClientComponentClient<Database>();
   const { requests } = useAppSelector((state) => state.cache);
@@ -16,7 +17,14 @@ export default function DataClientSimple() {
 
   useEffect(() => {
     async function getData() {
-      const startTime = performance.now();
+      const response = await fetch(
+        "https://raw.githubusercontent.com/jbrownlee/Datasets/master/wine.csv",
+      );
+      const text = await response.text();
+      const numbers = text
+        .split(",")
+        .filter((char) => !isNaN(parseInt(char, 10)) && !char.includes("/"));
+      console.log(numbers.length);
       const width = 960;
       const height = 500;
       const n = 5;
@@ -42,9 +50,11 @@ export default function DataClientSimple() {
         .offset(offset)
         .order(d3.stackOrderNone);
 
-      function randomize() {
+      function gen() {
         const layers = stack(
-          d3.transpose(Array.from({ length: n }, () => bumps(m, k))) as any,
+          d3.transpose(
+            Array.from({ length: n }, () => bumps(m, k, numbers)),
+          ) as any,
         );
         y.domain([
           d3.min(layers, (l) => d3.min(l, (d) => d[0]))!,
@@ -59,16 +69,17 @@ export default function DataClientSimple() {
         .attr("width", width)
         .attr("height", height)
         .attr("style", "max-width: 100%; height: auto;");
-
       const path = svg
         .selectAll("path")
-        .data(randomize())
+        .data(gen())
         .join("path")
         .attr("d", area as any)
         .attr("fill", () => z(Math.random()));
 
+      const endTime = performance.now();
       const updateChart = async () => {
-        const layers = randomize();
+        const layers = gen();
+        console.log(layers);
         await path
           .data(layers)
           .transition()
@@ -80,7 +91,6 @@ export default function DataClientSimple() {
       };
 
       await updateChart();
-      const endTime = performance.now();
       const timeTaken = endTime - startTime;
       const loadData = {
         method: "data",
@@ -114,6 +124,9 @@ export default function DataClientSimple() {
           Client Side Data: Simple
         </h1>
         <h2 className="font-xl text-zinc-400">5 Layers, 20 Samples, 2 Bumps</h2>
+        <h2 className="font-xl text-zinc-400">
+          Data generated using 1,600+ numbers from the wine dataset
+        </h2>
         <svg ref={svgRef}></svg>
       </div>
     </div>
@@ -121,19 +134,26 @@ export default function DataClientSimple() {
 }
 
 // Helper function to generate random bumps
-function bumps(n: number, m: number): number[] {
+function bumps(n: number, m: number, numbers: string[]): number[] {
   const a = [];
   for (let i = 0; i < n; ++i) {
     a[i] = 0;
   }
   for (let j = 0; j < m; ++j) {
-    let x = 1 / (0.1 + Math.random());
-    let y = 2 * Math.random() - 0.5;
-    let z = 10 / (0.1 + Math.random());
+    const x = 1 / (0.1 + Math.random());
+    const y = 2 * Math.random() - 0.5;
+    const z = 10 / (0.1 + Math.random());
+    const bumpInfluence = parseFloat(randomElement(numbers));
     for (let i = 0; i < n; i++) {
       let w = (i / n - y) * z;
-      a[i] += x * Math.exp(-w * w);
+      a[i] += x * Math.exp(-w * w) * bumpInfluence;
     }
   }
   return a;
+}
+
+// Helper function to pick a random element from an array
+function randomElement(array: string[]): string {
+  const index = Math.floor(Math.random() * array.length);
+  return array[index];
 }

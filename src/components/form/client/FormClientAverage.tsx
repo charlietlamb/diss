@@ -54,13 +54,14 @@ export default function FormClientAverage() {
     const timeTaken = performance.now() - startTime;
     toast("Form submitted successfully", { icon: "🚀" });
     const loadData = {
+      method: "submit",
       render: "client",
       complexity: "average",
       time: timeTaken,
       cached: requests.includes("submit/client/average"),
     };
     const { error: submitError } = await supabase
-      .from("submissions")
+      .from("loads")
       .insert(loadData);
     if (submitError) throw submitError;
     if (!loadData.cached) {

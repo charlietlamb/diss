@@ -58,13 +58,14 @@ export default function FormClientComplex() {
     const timeTaken = performance.now() - startTime;
     toast("Form submitted successfully", { icon: "🚀" });
     const loadData = {
+      method: "submit",
       render: "client",
       complexity: "complex",
       time: timeTaken,
       cached: requests.includes("submit/client/complex"),
     };
     const { error: submitError } = await supabase
-      .from("submissions")
+      .from("loads")
       .insert(loadData);
     if (submitError) throw submitError;
     if (!loadData.cached) {

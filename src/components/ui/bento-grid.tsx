@@ -14,7 +14,7 @@ export const BentoGrid = ({
   return (
     <div
       className={cn(
-        "relative z-50 mx-auto grid max-w-7xl  grid-cols-1 gap-4 md:auto-rows-[18rem] md:grid-cols-3",
+        "relative z-50 mx-auto grid max-w-7xl grid-cols-1 gap-4 md:auto-rows-[18rem] md:grid-cols-3",
         className,
       )}
     >
@@ -45,7 +45,7 @@ export const BentoGridItem = ({
         "group/bento row-span-1 flex cursor-pointer flex-col justify-between space-y-4 rounded-xl border border-white/[0.2] bg-black p-4 shadow-none shadow-input transition duration-200 hover:shadow-xl",
         className,
       )}
-      onClick={() => router.push(`/app/${href}`)}
+      onClick={() => typeof href === "string" && router.push(href)}
     >
       {header}
       <div className="transition duration-200 group-hover/bento:translate-x-2">

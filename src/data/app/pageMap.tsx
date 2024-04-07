@@ -1,12 +1,18 @@
 import ChartsClientAverage from "@/components/charts/client/ChartsClientAverage";
 import ChartsClientComplex from "@/components/charts/client/ChartsClientComplex";
 import ChartsClientSimple from "@/components/charts/client/ChartsClientSimple";
+import ChartsHybridAverage from "@/components/charts/hybrid/ChartsHybridAverage";
+import ChartsHybridComplex from "@/components/charts/hybrid/ChartsHybridComplex";
+import ChartsHybridSimple from "@/components/charts/hybrid/ChartsHybridSimple";
 import ChartsServerAverage from "@/components/charts/server/ChartsServerAverage";
 import ChartsServerComplex from "@/components/charts/server/ChartsServerComplex";
 import ChartsServerSimple from "@/components/charts/server/ChartsServerSimple";
 import DataClientAverage from "@/components/data/client/DataClientAverage";
 import DataClientComplex from "@/components/data/client/DataClientComplex";
 import DataClientSimple from "@/components/data/client/DataClientSimple";
+import DataHybridAverage from "@/components/data/hybrid/DataHybridAverage";
+import DataHybridComplex from "@/components/data/hybrid/DataHybridComplex";
+import DataHybridSimple from "@/components/data/hybrid/DataHybridSimple";
 import DataServerAverage from "@/components/data/server/DataServerAverage";
 import DataServerComplex from "@/components/data/server/DataServerComplex";
 import DataServerSimple from "@/components/data/server/DataServerSimple";
@@ -59,10 +65,16 @@ const serverChartsMap: InnerMapEnd = new Map([
   ["complex", <ChartsServerComplex key="complex" />],
 ]);
 
+const hybridChartsMap: InnerMapEnd = new Map([
+  ["simple", <ChartsHybridSimple key="simple" />],
+  ["average", <ChartsHybridAverage key="average" />],
+  ["complex", <ChartsHybridComplex key="complex" />],
+]);
+
 const chartsMap: Map<string, InnerMapEnd> = new Map([
   ["client", clientChartsMap],
   ["server", serverChartsMap],
-  // ["hybrid", hybridChartsMap],
+  ["hybrid", hybridChartsMap],
 ]);
 
 const clientDataMap: InnerMapEnd = new Map([
@@ -77,10 +89,16 @@ const serverDataMap: InnerMapEnd = new Map([
   ["complex", <DataServerComplex key="complex" />],
 ]);
 
+const hybridDataMap: InnerMapEnd = new Map([
+  ["simple", <DataHybridSimple key="simple" />],
+  ["average", <DataHybridAverage key="average" />],
+  ["complex", <DataHybridComplex key="complex" />],
+]);
+
 const dataMap: Map<string, InnerMapEnd> = new Map([
   ["client", clientDataMap],
   ["server", serverDataMap],
-  // ["hybrid", hybridDataMap],
+  ["hybrid", hybridDataMap],
 ]);
 
 export const pageMap: Map<string, InnerMap> = new Map([

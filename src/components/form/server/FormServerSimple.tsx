@@ -5,6 +5,7 @@ import { Label } from "../../ui/label";
 import { Textarea } from "../../ui/textarea";
 import { cookies } from "next/headers";
 import ServerWrap from "@/components/ServerWrap";
+import { useReportWebVitals } from "next/web-vitals";
 
 const submitForm1 = async (formData: FormData) => {
   "use server";
@@ -38,7 +39,7 @@ export default async function FormServerSimple() {
     },
     body: JSON.stringify({
       time: performance.now() - startTime,
-      key: "forms/server/simple",
+      key: "form/server/simple",
     }),
   });
   return (

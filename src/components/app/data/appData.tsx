@@ -28,7 +28,7 @@ export const appData: AppData[] = [
     title: "Form Comparison",
     description:
       "Compare the load times and effectiveness of client, server and hybrid methods when rendering forms.",
-    href: "form",
+    href: "/app/form/client/simple",
     header: <SkeletonOne />,
     icon: <FolderInput className="h-4 w-4 text-neutral-500" />,
   },
@@ -36,7 +36,7 @@ export const appData: AppData[] = [
     title: "Chart Comparison",
     description:
       "Compare the load times and effectiveness of client, server and hybrid methods when rendering charts.",
-    href: "charts",
+    href: "/app/charts/client/simple",
     header: <SkeletonTwo />,
     icon: <BarChartBig className="h-4 w-4 text-neutral-500" />,
   },
@@ -44,32 +44,43 @@ export const appData: AppData[] = [
     title: "Data Comparison",
     description:
       "Compare the load times and effectiveness of client, server and hybrid methods when rendering large data.",
-    href: "data",
+    href: "/app/data/client/simple",
     header: <SkeletonThree />,
     icon: <Database className="h-4 w-4 text-neutral-500" />,
   },
+  // {
+  //   title: "Render Visualiser",
+  //   description:
+  //     "Visualise the loading processes of client, server and hybrid methods.",
+  //   href: "visualiser",
+  //   header: (
+  //     <div className="flex h-full flex-col justify-center">
+  //       <GlowingStarsBackgroundCard className="flex h-full max-h-[8rem] w-full items-center justify-center" />
+  //     </div>
+  //   ),
+  //   icon: <Eye className="h-4 w-4 text-neutral-500" />,
+  // },
   {
-    title: "Render Visualiser",
-    description:
-      "Visualise the loading processes of client, server and hybrid methods.",
-    href: "visualiser",
-    header: (
-      <div className="flex h-full flex-col justify-center">
-        <GlowingStarsBackgroundCard className="flex h-full max-h-[8rem] w-full items-center justify-center" />
-      </div>
-    ),
-    icon: <Eye className="h-4 w-4 text-neutral-500" />,
-  },
-  {
-    title: "Previous Results",
+    title: "Results",
     description:
       "View previous results when comparing client, server and hybrid methods.",
-    href: "results",
+    href: "/results/form",
     header: (
       <div className="flex h-full flex-col justify-center">
         <EvervaultCard text="hover" />
       </div>
     ),
     icon: <TestTube2 className="h-4 w-4 text-neutral-500" />,
+  },
+  {
+    title: "Compare",
+    description: "Compare different tests and find out key statistics.",
+    href: "/compare",
+    header: (
+      <div className="flex h-full flex-col justify-center">
+        <EvervaultCard text="hover" compare />
+      </div>
+    ),
+    icon: <GitCompareArrows className="h-4 w-4 text-neutral-500" />,
   },
 ];

@@ -4,6 +4,13 @@ import { JSDOM } from "jsdom";
 
 export default async function DataServerAverage() {
   const startTime = performance.now();
+  const response = await fetch(
+    "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.csv",
+  );
+  const text = await response.text();
+  const numbers = text
+    .split(",")
+    .filter((char) => !isNaN(parseInt(char, 10)) && !char.includes("/"));
   const width = 960;
   const height = 500;
   const n = 10;
@@ -31,7 +38,9 @@ export default async function DataServerAverage() {
 
   function randomize() {
     const layers = stack(
-      d3.transpose(Array.from({ length: n }, () => bumps(m, k))) as any,
+      d3.transpose(
+        Array.from({ length: n }, () => bumps(m, k, numbers)),
+      ) as any,
     );
     y.domain([
       d3.min(layers, (l) => d3.min(l, (d) => d[0]))!,
@@ -81,6 +90,10 @@ export default async function DataServerAverage() {
           <h2 className="font-xl text-zinc-400">
             10 Layers, 50 Samples, 5 Bumps
           </h2>
+          <h2 className="font-xl text-zinc-400">
+            Data generated using 6,000+ numbers from the Pima Indians Diabetes
+            dataset
+          </h2>
           <div dangerouslySetInnerHTML={{ __html: svgHtml }} />
         </div>
       </div>
@@ -89,19 +102,26 @@ export default async function DataServerAverage() {
 }
 
 // Helper function to generate random bumps
-function bumps(n: number, m: number): number[] {
+function bumps(n: number, m: number, numbers: string[]): number[] {
   const a = [];
   for (let i = 0; i < n; ++i) {
     a[i] = 0;
   }
   for (let j = 0; j < m; ++j) {
-    let x = 1 / (0.1 + Math.random());
-    let y = 2 * Math.random() - 0.5;
-    let z = 10 / (0.1 + Math.random());
+    const x = 1 / (0.1 + Math.random());
+    const y = 2 * Math.random() - 0.5;
+    const z = 10 / (0.1 + Math.random());
+    const bumpInfluence = parseFloat(randomElement(numbers));
     for (let i = 0; i < n; i++) {
       let w = (i / n - y) * z;
-      a[i] += x * Math.exp(-w * w);
+      a[i] += x * Math.exp(-w * w) * bumpInfluence;
     }
   }
   return a;
+}
+
+// Helper function to pick a random element from an array
+function randomElement(array: string[]): string {
+  const index = Math.floor(Math.random() * array.length);
+  return array[index];
 }

@@ -23,7 +23,7 @@ export default function Complexity() {
   const pathname = usePathname();
   const router = useRouter();
 
-  if (pathname === "/app") return null;
+  if (pathname === "/app" || pathname.includes("results")) return null;
   return (
     <div className="relative z-50 flex min-h-full flex-col justify-start gap-y-8 border-r border-zinc-700">
       <h2 className="text-md border-b border-zinc-700 bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text p-4 text-left text-lg font-bold text-transparent">
@@ -38,6 +38,7 @@ export default function Complexity() {
                   onClick={() => {
                     if (c !== complexity) {
                       router.push(`/app/${method}/${render}/${c}`);
+                      if (render === "server") router.refresh();
                     }
                   }}
                   variant="zinc_outline"

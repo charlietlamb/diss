@@ -3,14 +3,16 @@ import { useMotionValue } from "framer-motion";
 import React, { useState, useEffect } from "react";
 import { useMotionTemplate, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { LockKeyhole } from "lucide-react";
+import { GitCompareArrows, LockKeyhole } from "lucide-react";
 
 export const EvervaultCard = ({
   text,
   className,
+  compare = false,
 }: {
   text?: string;
   className?: string;
+  compare?: boolean;
 }) => {
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);
@@ -49,7 +51,11 @@ export const EvervaultCard = ({
         />
         <div className="relative z-10 flex items-center justify-center">
           <div className="relative flex h-44  w-44 items-center justify-center rounded-full text-4xl font-bold text-white">
-            <LockKeyhole className="z-20 h-12 w-12 text-zinc-200" />
+            {!compare ? (
+              <LockKeyhole className="z-20 h-12 w-12 text-zinc-200" />
+            ) : (
+              <GitCompareArrows className="z-20 h-12 w-12 text-zinc-200" />
+            )}
           </div>
         </div>
       </div>

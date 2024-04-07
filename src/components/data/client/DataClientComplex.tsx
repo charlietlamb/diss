@@ -8,6 +8,7 @@ import { setRequests } from "@/state/cache/cacheSlice";
 import { toast } from "sonner";
 
 export default function DataClientComplex() {
+  const startTime = performance.now();
   const svgRef = useRef<SVGSVGElement>(null);
   const supabase = createClientComponentClient<Database>();
   const { requests } = useAppSelector((state) => state.cache);
@@ -16,12 +17,19 @@ export default function DataClientComplex() {
 
   useEffect(() => {
     async function getData() {
-      const startTime = performance.now();
+      const response = await fetch(
+        "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+      );
+      const text = await response.text();
+      const numbers = text
+        .split(",")
+        .filter((char) => !isNaN(parseInt(char, 10)) && !char.includes("/"));
+      console.log(numbers);
       const width = 960;
       const height = 500;
-      const n = 10;
-      const m = 50;
-      const k = 5;
+      const n = 20;
+      const m = 200;
+      const k = 10;
       const offset = d3.stackOffsetWiggle;
       const x = d3
         .scaleLinear()
@@ -42,9 +50,11 @@ export default function DataClientComplex() {
         .offset(offset)
         .order(d3.stackOrderNone);
 
-      function randomize() {
+      function gen() {
         const layers = stack(
-          d3.transpose(Array.from({ length: n }, () => bumps(m, k))) as any,
+          d3.transpose(
+            Array.from({ length: n }, () => bumps(m, k, numbers)),
+          ) as any,
         );
         y.domain([
           d3.min(layers, (l) => d3.min(l, (d) => d[0]))!,
@@ -59,32 +69,28 @@ export default function DataClientComplex() {
         .attr("width", width)
         .attr("height", height)
         .attr("style", "max-width: 100%; height: auto;");
-
       const path = svg
         .selectAll("path")
-        .data(randomize())
+        .data(gen())
         .join("path")
         .attr("d", area as any)
         .attr("fill", () => z(Math.random()));
 
-      // if (!init) return setInit(true);
+      const endTime = performance.now();
       const updateChart = async () => {
-        const layers = randomize();
+        const layers = gen();
+        console.log(layers);
         await path
           .data(layers)
           .transition()
-          .delay(0)
-          .duration(1000)
+          .delay(1000)
+          .duration(1500)
           .attr("d", area as any)
           .end();
-        setTimeout(updateChart, 0);
+        setTimeout(updateChart, 2500);
       };
-      try {
-        await updateChart();
-      } catch (e) {
-        throw e;
-      }
-      const endTime = performance.now();
+
+      await updateChart();
       const timeTaken = endTime - startTime;
       const loadData = {
         method: "data",
@@ -120,6 +126,9 @@ export default function DataClientComplex() {
         <h2 className="font-xl text-zinc-400">
           20 Layers, 200 Samples, 10 Bumps
         </h2>
+        <h2 className="font-xl text-zinc-400">
+          Data generated using 300,000+ numbers from the COVID-19 dataset
+        </h2>
         <svg ref={svgRef}></svg>
       </div>
     </div>
@@ -127,19 +136,26 @@ export default function DataClientComplex() {
 }
 
 // Helper function to generate random bumps
-function bumps(n: number, m: number): number[] {
+function bumps(n: number, m: number, numbers: string[]): number[] {
   const a = [];
   for (let i = 0; i < n; ++i) {
     a[i] = 0;
   }
   for (let j = 0; j < m; ++j) {
-    let x = 1 / (0.1 + Math.random());
-    let y = 2 * Math.random() - 0.5;
-    let z = 10 / (0.1 + Math.random());
+    const x = 1 / (0.1 + Math.random());
+    const y = 2 * Math.random() - 0.5;
+    const z = 10 / (0.1 + Math.random());
+    const bumpInfluence = parseFloat(randomElement(numbers));
     for (let i = 0; i < n; i++) {
       let w = (i / n - y) * z;
-      a[i] += x * Math.exp(-w * w);
+      a[i] += x * Math.exp(-w * w) * bumpInfluence;
     }
   }
   return a;
+}
+
+// Helper function to pick a random element from an array
+function randomElement(array: string[]): string {
+  const index = Math.floor(Math.random() * array.length);
+  return array[index];
 }
