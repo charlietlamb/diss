@@ -37,8 +37,8 @@ export default function Complexity() {
                 <Button
                   onClick={() => {
                     if (c !== complexity) {
-                      router.push(`/app/${method}/${render}/${c}`);
-                      if (render === "server") router.refresh();
+                      window.location.href = `/app/${method}/${render}/${c}`;
+                      // router.push(`/app/${method}/${render}/${c}`);
                     }
                   }}
                   variant="zinc_outline"

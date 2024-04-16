@@ -4,8 +4,6 @@ import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { Textarea } from "../../ui/textarea";
 import { cookies } from "next/headers";
-import ServerWrap from "@/components/ServerWrap";
-import { useReportWebVitals } from "next/web-vitals";
 
 const submitForm1 = async (formData: FormData) => {
   "use server";
@@ -31,58 +29,45 @@ const submitForm1 = async (formData: FormData) => {
 };
 
 export default async function FormServerSimple() {
-  const startTime = performance.now();
-  await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/toast`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      time: performance.now() - startTime,
-      key: "form/server/simple",
-    }),
-  });
   return (
-    <ServerWrap>
-      <div className="relative z-50 flex  flex-grow  flex-col gap-y-4 overflow-y-auto rounded-lg px-4 py-8">
-        <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-left text-6xl font-bold text-transparent">
-          Server Side Form: Simple
-        </h1>
-        <form action={submitForm1} className="flex w-full flex-col gap-4">
-          <div className="flex flex-col gap-y-2">
-            <Label>Name</Label>
-            <Input
-              name="name"
-              placeholder="Name"
-              type="text"
-              className="border border-zinc-300 p-2"
-            />
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <Label>Email</Label>
-            <Input
-              name="email"
-              placeholder="Email"
-              type="email"
-              className="border border-zinc-300 p-2"
-            />
-          </div>
-          <div className="flex flex-col gap-y-2">
-            <Label>Message</Label>
-            <Textarea
-              name="message"
-              placeholder="Message"
-              className="border border-zinc-300 p-2"
-            />
-          </div>
-          <Button
-            className="rounded-md bg-cyan-700 px-4 py-2 text-zinc-200 transition-all hover:bg-cyan-500"
-            type="submit"
-          >
-            Submit
-          </Button>
-        </form>
-      </div>
-    </ServerWrap>
+    <div className="relative z-50 flex  flex-grow  flex-col gap-y-4 overflow-y-auto rounded-lg px-4 py-8">
+      <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-left text-6xl font-bold text-transparent">
+        Server Side Form: Simple
+      </h1>
+      <form action={submitForm1} className="flex w-full flex-col gap-4">
+        <div className="flex flex-col gap-y-2">
+          <Label>Name</Label>
+          <Input
+            name="name"
+            placeholder="Name"
+            type="text"
+            className="border border-zinc-300 p-2"
+          />
+        </div>
+        <div className="flex flex-col gap-y-2">
+          <Label>Email</Label>
+          <Input
+            name="email"
+            placeholder="Email"
+            type="email"
+            className="border border-zinc-300 p-2"
+          />
+        </div>
+        <div className="flex flex-col gap-y-2">
+          <Label>Message</Label>
+          <Textarea
+            name="message"
+            placeholder="Message"
+            className="border border-zinc-300 p-2"
+          />
+        </div>
+        <Button
+          className="rounded-md bg-cyan-700 px-4 py-2 text-zinc-200 transition-all hover:bg-cyan-500"
+          type="submit"
+        >
+          Submit
+        </Button>
+      </form>
+    </div>
   );
 }

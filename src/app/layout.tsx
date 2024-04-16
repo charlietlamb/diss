@@ -5,6 +5,7 @@ import NavBar from "@/components/nav/NavBar";
 import StoreProvider from "@/state/StoreProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { WebVitals } from "@/components/performance/WebVitals";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -30,6 +31,7 @@ export default function RootLayout({
               <NavBar></NavBar>
               {children}
               <Toaster />
+              {/* <WebVitals noReport /> */}
             </div>
           </ThemeProvider>
         </StoreProvider>

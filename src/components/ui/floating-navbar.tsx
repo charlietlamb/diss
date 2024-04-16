@@ -8,6 +8,7 @@ import {
 } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/state/hooks";
+import { useRouter } from "next/navigation";
 
 export const FloatingNav = ({
   navItems,
@@ -21,7 +22,7 @@ export const FloatingNav = ({
   className?: string;
 }) => {
   const { scrollYProgress } = useScroll();
-
+  const router = useRouter();
   const [visible, setVisible] = useState(true);
   const { mode } = useAppSelector((state) => state.render);
   useMotionValueEvent(scrollYProgress, "change", (current) => {
@@ -62,7 +63,10 @@ export const FloatingNav = ({
             className={cn(
               "group relative flex items-center justify-center space-x-1 text-neutral-50 hover:text-neutral-300",
             )}
-            onClick={() => navItem.onClick()}
+            onClick={() => {
+              navItem.onClick();
+              router.refresh();
+            }}
           >
             <span className="block sm:hidden">{navItem.icon}</span>
             <span className="hidden text-sm sm:block">{navItem.name}</span>

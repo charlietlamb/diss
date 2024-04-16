@@ -17,42 +17,6 @@ const dataWithIndex = data24.map((item, index) => ({
   index,
 }));
 export default function ChartsClientSimple() {
-  const [loadTime, setLoadTime] = useState(0);
-  const [init, setInit] = useState(false);
-  const supabase = createClientComponentClient<Database>();
-  const { requests } = useAppSelector((state: RootState) => state.cache);
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    const startTime = performance.now();
-    setLoadTime(startTime);
-  }, []);
-
-  useEffect(() => {
-    async function getData() {
-      if (!init) return setInit(true);
-      const endTime = performance.now();
-      const timeTaken = endTime - loadTime;
-      const loadData = {
-        method: "charts",
-        render: "client",
-        complexity: "simple",
-        time: timeTaken,
-        cached: requests.includes("charts/client/simple"),
-      };
-      toast("Initial load time: " + Math.round(timeTaken) + "ms", {
-        icon: "🕰",
-        description: loadData.cached
-          ? "This page was previously cached"
-          : "This page was not cached",
-      });
-      const { error } = await supabase.from("loads").insert(loadData);
-      if (error) throw error;
-      if (!loadData.cached) {
-        dispatch(setRequests([...requests, "charts/client/simple"]));
-      }
-    }
-    getData();
-  }, [loadTime]);
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-y-8 pt-16">
       <div className="flex flex-col items-center">

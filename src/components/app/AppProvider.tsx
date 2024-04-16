@@ -32,11 +32,6 @@ export default function AppProvider({
       onClick: () => dispatch(setMode("server")),
       icon: <Server className="h-4 w-4 text-zinc-200" />,
     },
-    {
-      name: "Hybrid",
-      onClick: () => dispatch(setMode("hybrid")),
-      icon: <Blend className="h-4 w-4 text-zinc-200" />,
-    },
   ];
   useEffect(() => {
     if (currentMode) dispatch(setMode(currentMode));
@@ -46,9 +41,9 @@ export default function AppProvider({
     console.log("trying to change mode to ", mode);
     if (mode !== currentMode && type && init) {
       if (currentComplexity) {
-        router.push(`/app/${type}/${mode}/${currentComplexity}`);
+        window.location.href = `/app/${type}/${mode}/${currentComplexity}`;
       } else {
-        router.push(`/app/${type}/${mode}`);
+        window.location.href = `/app/${type}/${mode}`;
       }
       toast(`Successfully switched to ${mode} rendering`, { icon: "🚀" });
     }

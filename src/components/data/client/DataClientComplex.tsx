@@ -1,19 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import * as d3 from "d3";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { setRequests } from "@/state/cache/cacheSlice";
-import { toast } from "sonner";
 
 export default function DataClientComplex() {
-  const startTime = performance.now();
   const svgRef = useRef<SVGSVGElement>(null);
-  const supabase = createClientComponentClient<Database>();
-  const { requests } = useAppSelector((state) => state.cache);
-  const dispatch = useAppDispatch();
-  const [init, setInit] = useState(false);
 
   useEffect(() => {
     async function getData() {
@@ -24,7 +15,6 @@ export default function DataClientComplex() {
       const numbers = text
         .split(",")
         .filter((char) => !isNaN(parseInt(char, 10)) && !char.includes("/"));
-      console.log(numbers);
       const width = 960;
       const height = 500;
       const n = 20;
@@ -91,25 +81,6 @@ export default function DataClientComplex() {
       };
 
       await updateChart();
-      const timeTaken = endTime - startTime;
-      const loadData = {
-        method: "data",
-        render: "client",
-        complexity: "complex",
-        time: timeTaken,
-        cached: requests.includes("data/client/complex"),
-      };
-      toast("Initial load time: " + Math.round(timeTaken) + "ms", {
-        icon: "🕰",
-        description: loadData.cached
-          ? "This page was previously cached"
-          : "This page was not cached",
-      });
-      const { error } = await supabase.from("loads").insert(loadData);
-      if (error) throw error;
-      if (!loadData.cached) {
-        dispatch(setRequests([...requests, "data/client/complex"]));
-      }
     }
     getData();
     return () => {

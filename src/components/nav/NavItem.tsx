@@ -22,12 +22,21 @@ export default function NavItem({ text, href }: NavItemProps) {
         isPath && "bg-zinc-800/80",
       )}
     >
-      <Link
-        href={href}
-        className="bg-gradient-to-b from-zinc-100 to-zinc-400 bg-clip-text text-center text-lg font-bold text-transparent decoration-2 hover:underline"
-      >
-        {text}
-      </Link>
+      {href.includes("/app/") ? (
+        <div
+          onClick={() => (window.location.href = href)}
+          className="bg-gradient-to-b from-zinc-100 to-zinc-400 bg-clip-text text-center text-lg font-bold text-transparent decoration-2 hover:underline"
+        >
+          {text}
+        </div>
+      ) : (
+        <Link
+          href={href}
+          className="bg-gradient-to-b from-zinc-100 to-zinc-400 bg-clip-text text-center text-lg font-bold text-transparent decoration-2 hover:underline"
+        >
+          {text}
+        </Link>
+      )}
     </div>
   );
 }

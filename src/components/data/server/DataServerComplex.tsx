@@ -1,9 +1,7 @@
-import ServerWrap from "@/components/ServerWrap";
 import * as d3 from "d3";
 import { JSDOM } from "jsdom";
 
 export default async function DataServerComplex() {
-  const startTime = performance.now();
   const response = await fetch(
     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
   );
@@ -70,33 +68,23 @@ export default async function DataServerComplex() {
   }
 
   const svgHtml = generateSvg();
-  await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/toast`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      time: performance.now() - startTime,
-      key: "data/server/complex",
-    }),
-  });
   return (
-    <ServerWrap>
-      <div className="flex h-full min-h-full w-full flex-col gap-4 p-4">
-        <div className="flex flex-col items-center">
-          <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-center text-6xl font-bold text-transparent">
-            Server Side Data: Complex
-          </h1>
-          <h2 className="font-xl text-zinc-400">
-            20 Layers, 200 Samples, 10 Bumps
-          </h2>
-          <h2 className="font-xl text-zinc-400">
-            Data generated using 300,000+ numbers from the COVID-19 dataset
-          </h2>
-          <div dangerouslySetInnerHTML={{ __html: svgHtml }} />
-        </div>
+    // <ServerWrap>
+    <div className="flex h-full min-h-full w-full flex-col gap-4 p-4">
+      <div className="flex flex-col items-center">
+        <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-center text-6xl font-bold text-transparent">
+          Server Side Data: Complex
+        </h1>
+        <h2 className="font-xl text-zinc-400">
+          20 Layers, 200 Samples, 10 Bumps
+        </h2>
+        <h2 className="font-xl text-zinc-400">
+          Data generated using 300,000+ numbers from the COVID-19 dataset
+        </h2>
+        <div dangerouslySetInnerHTML={{ __html: svgHtml }} />
       </div>
-    </ServerWrap>
+    </div>
+    // </ServerWrap>
   );
 }
 

@@ -53,7 +53,8 @@ export type Database = {
       }
       loads: {
         Row: {
-          cached: boolean
+          cached: boolean | null
+          cls: number | null
           complexity: string
           created_at: string
           fcp: number | null
@@ -62,10 +63,10 @@ export type Database = {
           method: string
           render: string
           time: number
-          ttfb: number | null
         }
         Insert: {
-          cached?: boolean
+          cached?: boolean | null
+          cls?: number | null
           complexity?: string
           created_at?: string
           fcp?: number | null
@@ -74,10 +75,10 @@ export type Database = {
           method?: string
           render?: string
           time?: number
-          ttfb?: number | null
         }
         Update: {
-          cached?: boolean
+          cached?: boolean | null
+          cls?: number | null
           complexity?: string
           created_at?: string
           fcp?: number | null
@@ -86,7 +87,6 @@ export type Database = {
           method?: string
           render?: string
           time?: number
-          ttfb?: number | null
         }
         Relationships: []
       }

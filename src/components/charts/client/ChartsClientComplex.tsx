@@ -1,23 +1,14 @@
 "use client";
 
-import { setRequests } from "@/state/cache/cacheSlice";
-import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
-import { toast } from "sonner";
 
 export type DataItem = {
   goal: number;
   index: number;
 };
 export default function ChartsClientComplex() {
-  const [loadTime, setLoadTime] = useState(0);
-  const [init, setInit] = useState(false);
   const [data, setData] = useState<DataItem[]>([]);
-  const { requests } = useAppSelector((state) => state.cache);
-  const supabase = createClientComponentClient();
-  const dispatch = useAppDispatch();
   const fetchData = async () => {
     try {
       const response = await fetch("/api/data-complex");
@@ -55,38 +46,10 @@ export default function ChartsClientComplex() {
       console.error("Error fetching data:", error);
     }
   };
-  useEffect(() => {
-    const startTime = performance.now();
-    setLoadTime(startTime);
-  }, []);
 
   useEffect(() => {
-    async function getTime() {
-      if (!init) return setInit(true);
-      await fetchData();
-      const endTime = performance.now();
-      const timeTaken = endTime - loadTime;
-      const loadData = {
-        method: "charts",
-        render: "client",
-        complexity: "complex",
-        time: timeTaken,
-        cached: requests.includes("charts/client/complex"),
-      };
-      toast("Initial load time: " + Math.round(timeTaken) + "ms", {
-        icon: "🕰",
-        description: loadData.cached
-          ? "This page was previously cached"
-          : "This page was not cached",
-      });
-      const { error } = await supabase.from("loads").insert(loadData);
-      if (error) throw error;
-      if (!loadData.cached) {
-        dispatch(setRequests([...requests, "charts/client/complex"]));
-      }
-    }
-    getTime();
-  }, [loadTime]);
+    fetchData();
+  }, []);
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-y-8 pt-16">
       <div className="flex flex-col items-center">

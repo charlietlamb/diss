@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, MouseEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
@@ -10,8 +10,6 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { File } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { setRequests } from "@/state/cache/cacheSlice";
 
 export default function FormClientComplex() {
   const [name, setName] = useState("");
@@ -23,11 +21,7 @@ export default function FormClientComplex() {
   const [previewImage2, setPreviewImage2] = useState<string | null>(null);
   const [file3, setFile3] = useState<File | null>(null);
   const [previewImage3, setPreviewImage3] = useState<string | null>(null);
-  const [loadTime, setLoadTime] = useState(0);
   const supabase = createClientComponentClient<Database>();
-  const { requests } = useAppSelector((state) => state.cache);
-  const dispatch = useAppDispatch();
-  const [init, setInit] = useState(false);
   async function submitButton() {
     if (!name || !email || !message || !file || !file2 || !file3)
       return toast("Please fill in all fields", { icon: "🚫" });
@@ -62,15 +56,12 @@ export default function FormClientComplex() {
       render: "client",
       complexity: "complex",
       time: timeTaken,
-      cached: requests.includes("submit/client/complex"),
+      cached: null,
     };
     const { error: submitError } = await supabase
       .from("loads")
       .insert(loadData);
     if (submitError) throw submitError;
-    if (!loadData.cached) {
-      dispatch(setRequests([...requests, "submit/client/complex"]));
-    }
     setTimeout(() => {
       toast("Submit time: " + Math.round(timeTaken) + "ms", {
         icon: "📤",
@@ -119,37 +110,6 @@ export default function FormClientComplex() {
       setPreviewImage3(URL.createObjectURL(file));
     }
   };
-  useEffect(() => {
-    const startTime = performance.now();
-    setLoadTime(startTime);
-  }, []);
-
-  useEffect(() => {
-    async function getTime() {
-      if (!init) return setInit(true);
-      const endTime = performance.now();
-      const timeTaken = endTime - loadTime;
-      const loadData = {
-        method: "form",
-        render: "client",
-        complexity: "complex",
-        time: timeTaken,
-        cached: requests.includes("form/client/complex"),
-      };
-      toast("Initial load time: " + Math.round(timeTaken) + "ms", {
-        icon: "🕰",
-        description: loadData.cached
-          ? "This page was previously cached"
-          : "This page was not cached",
-      });
-      const { error } = await supabase.from("loads").insert(loadData);
-      if (error) throw error;
-      if (!loadData.cached) {
-        dispatch(setRequests([...requests, "form/client/complex"]));
-      }
-    }
-    getTime();
-  }, [loadTime]);
   return (
     <div className="relative z-50 flex  flex-grow  flex-col gap-y-4 overflow-y-auto rounded-lg px-4 py-8">
       <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-left text-6xl font-bold text-transparent">

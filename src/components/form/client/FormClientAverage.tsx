@@ -10,8 +10,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { File } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { useAppDispatch, useAppSelector } from "@/state/hooks";
-import { setRequests } from "@/state/cache/cacheSlice";
+import { useAppSelector } from "@/state/hooks";
 
 export default function FormClientAverage() {
   const [name, setName] = useState("");
@@ -25,11 +24,8 @@ export default function FormClientAverage() {
   const [imageData, setImageData] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [loadTime, setLoadTime] = useState(0);
   const supabase = createClientComponentClient<Database>();
   const { requests } = useAppSelector((state) => state.cache);
-  const dispatch = useAppDispatch();
-  const [init, setInit] = useState(false);
   async function submitButton() {
     if (
       !name ||
@@ -64,9 +60,6 @@ export default function FormClientAverage() {
       .from("loads")
       .insert(loadData);
     if (submitError) throw submitError;
-    if (!loadData.cached) {
-      dispatch(setRequests([...requests, "submit/client/average"]));
-    }
     setTimeout(() => {
       toast("Submit time: " + Math.round(timeTaken) + "ms", {
         icon: "📤",
@@ -76,10 +69,6 @@ export default function FormClientAverage() {
       });
     }, 1000);
   }
-  useEffect(() => {
-    const startTime = performance.now();
-    setLoadTime(startTime);
-  }, []);
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const file = e.target.files[0];
@@ -94,33 +83,6 @@ export default function FormClientAverage() {
       setFileName(file.name);
     }
   };
-
-  useEffect(() => {
-    async function getTime() {
-      if (!init) return setInit(true);
-      const endTime = performance.now();
-      const timeTaken = endTime - loadTime;
-      const loadData = {
-        method: "form",
-        render: "client",
-        complexity: "average",
-        time: timeTaken,
-        cached: requests.includes("form/client/average"),
-      };
-      toast("Initial load time: " + Math.round(timeTaken) + "ms", {
-        icon: "🕰",
-        description: loadData.cached
-          ? "This page was previously cached"
-          : "This page was not cached",
-      });
-      const { error } = await supabase.from("loads").insert(loadData);
-      if (error) throw error;
-      if (!loadData.cached) {
-        dispatch(setRequests([...requests, "form/client/average"]));
-      }
-    }
-    getTime();
-  }, [loadTime]);
   return (
     <div className="relative z-50 flex  flex-grow  flex-col gap-y-4 overflow-y-auto rounded-lg px-4 py-8">
       <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-left text-6xl font-bold text-transparent">
