@@ -62,7 +62,7 @@ export function WebVitals({ noReport }: { noReport?: boolean }) {
     async function getTime() {
       if (!init) return setInit(true);
       if (reportSent) return;
-      if (!(FCP && LCP)) return;
+      if (!(FCP && LCP && INP)) return;
       const loadData = {
         method,
         render,
