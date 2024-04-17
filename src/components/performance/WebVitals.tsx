@@ -31,7 +31,7 @@ export function WebVitals({ noReport }: { noReport?: boolean }) {
     }
     console.log(jsonMap);
     if (jsonMap.hasOwnProperty(path)) {
-      if (jsonMap[path] > 0) setCached(true);
+      setCached(true);
       jsonMap[path]++;
     } else {
       jsonMap[path] = 0;
