@@ -9,7 +9,6 @@ export default function ChartsClientAverage() {
     try {
       const response = await fetch("/api/data");
       if (response.ok) {
-        console.log("setting data");
         setData(await response.json());
       } else {
         console.error("Failed to fetch data");

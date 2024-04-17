@@ -21,7 +21,6 @@ export function WebVitals({ noReport }: { noReport?: boolean }) {
   useEffect(() => {
     let jsonMap: Record<string, number> = {};
     const cookieStr = getCookie("str");
-    console.log(cookieStr);
 
     if (cookieStr) {
       try {
@@ -62,7 +61,6 @@ export function WebVitals({ noReport }: { noReport?: boolean }) {
     async function getTime() {
       if (!init) return setInit(true);
       if (reportSent) return;
-      console.log("CLS:", CLS, "FCP:", FCP, "LCP:", LCP);
       if (!(FCP && LCP)) return;
       const loadData = {
         method,

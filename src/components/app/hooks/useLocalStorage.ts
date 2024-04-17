@@ -3,9 +3,7 @@ export const useLocalStorage = (key: string) => {
     try {
       if (!window || !window.localStorage) return undefined;
       window.localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const getItem = () => {
@@ -13,9 +11,7 @@ export const useLocalStorage = (key: string) => {
       if (!window || !window.localStorage) return undefined;
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : undefined;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const removeItem = () => {
@@ -23,9 +19,7 @@ export const useLocalStorage = (key: string) => {
       if (!window || !window.localStorage) return undefined;
 
       window.localStorage.removeItem(key);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return { setItem, getItem, removeItem };

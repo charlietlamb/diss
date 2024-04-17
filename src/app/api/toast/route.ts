@@ -7,8 +7,6 @@ let data: {
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const body = await req.json();
-  console.log("---BODY---");
-  console.log(body);
   data = body;
   return NextResponse.json(data);
 }

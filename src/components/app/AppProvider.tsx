@@ -38,7 +38,6 @@ export default function AppProvider({
     setInit(true);
   }, [currentMode, setInit, dispatch]);
   useEffect(() => {
-    console.log("trying to change mode to ", mode);
     if (mode !== currentMode && type && init) {
       if (currentComplexity) {
         window.location.href = `/app/${type}/${mode}/${currentComplexity}`;

@@ -69,7 +69,6 @@ export default function DataClientAverage() {
       const endTime = performance.now();
       const updateChart = async () => {
         const layers = gen();
-        console.log(layers);
         await path
           .data(layers)
           .transition()

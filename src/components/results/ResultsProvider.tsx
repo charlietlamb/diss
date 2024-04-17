@@ -43,7 +43,6 @@ export default function ResultsProvider({
     setInit(true);
   }, [currentMode, setInit, dispatch]);
   useEffect(() => {
-    console.log("trying to change mode to ", mode);
     if (mode !== currentMode && type && init) {
       if (currentComplexity) {
         router.push(`/results/${type}/${mode}/${currentComplexity}`);

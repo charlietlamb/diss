@@ -15,7 +15,6 @@ export default function DataClientSimple() {
       const numbers = text
         .split(",")
         .filter((char) => !isNaN(parseInt(char, 10)) && !char.includes("/"));
-      console.log(numbers.length);
       const width = 960;
       const height = 500;
       const n = 5;
@@ -70,7 +69,6 @@ export default function DataClientSimple() {
       const endTime = performance.now();
       const updateChart = async () => {
         const layers = gen();
-        console.log(layers);
         await path
           .data(layers)
           .transition()

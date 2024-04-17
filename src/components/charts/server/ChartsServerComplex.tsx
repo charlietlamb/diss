@@ -7,7 +7,6 @@ export default async function ChartsServerComplex() {
   );
   let data;
   if (response.ok) {
-    console.log("setting data");
     const newData: DataItem[] = await response.json();
 
     const groupedData = newData.reduce((acc: DataItem[][], curr, index) => {

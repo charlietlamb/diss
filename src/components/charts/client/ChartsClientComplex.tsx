@@ -13,7 +13,6 @@ export default function ChartsClientComplex() {
     try {
       const response = await fetch("/api/data-complex");
       if (response.ok) {
-        console.log("setting data");
         const newData: DataItem[] = await response.json();
 
         const groupedData = newData.reduce((acc: DataItem[][], curr, index) => {
@@ -37,7 +36,6 @@ export default function ChartsClientComplex() {
             index: index * 10,
           };
         });
-        console.log(averagedData);
         setData(averagedData);
       } else {
         console.error("Failed to fetch data");
