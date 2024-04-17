@@ -21,8 +21,8 @@ export default function Results() {
   const [fcp, setFcp] = useState(initFcp);
   const initLcp = loadData.map((load, index) => ({ goal: load.lcp, index }));
   const [lcp, setLcp] = useState(initLcp);
-  const initCls = loadData.map((load, index) => ({ goal: load.cls, index }));
-  const [cls, setCls] = useState(initCls);
+  const initInp = loadData.map((load, index) => ({ goal: load.inp, index }));
+  const [inp, setInp] = useState(initInp);
   const pathname = usePathname();
   const [method, setMethod] = useState(pathname.split("/")[2]);
   const [render, setRender] = useState(pathname.split("/")[3]);
@@ -65,7 +65,7 @@ export default function Results() {
         setComplexity(newComplexity);
         setFcp(data.map((load, index) => ({ goal: load.fcp, index })));
         setLcp(data.map((load, index) => ({ goal: load.lcp, index })));
-        setCls(data.map((load, index) => ({ goal: load.cls, index })));
+        setInp(data.map((load, index) => ({ goal: load.inp, index })));
       }
     }
     getData();
@@ -144,7 +144,7 @@ export default function Results() {
         </h3>
         <div className="h-[60vh] w-[80vw]">
           <ResponsiveContainer width="100%">
-            <BarChart data={cls}>
+            <BarChart data={inp}>
               <Bar
                 dataKey="goal"
                 style={

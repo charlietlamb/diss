@@ -40,18 +40,19 @@ export function WebVitals({ noReport }: { noReport?: boolean }) {
     setCookie("str", JSON.stringify(jsonMap));
   }, [path]);
   useReportWebVitals((metric) => {
-    if (metric.name === "CLS") setCLS(metric.value);
+    console.log(metric);
+    if (metric.name === "INP") setINP(metric.value);
     if (metric.name === "FCP") setFCP(metric.value);
     if (metric.name === "LCP") setLCP(metric.value);
   });
   const supabase = createClientComponentClient<Database>();
   const [init, setInit] = useState(false);
-  const [CLS, setCLS] = useState(0);
+  const [INP, setINP] = useState(0);
   const [FCP, setFCP] = useState(0);
   const [LCP, setLCP] = useState(0);
   const [reportSent, setReportSent] = useState(false);
   useEffect(() => {
-    setCLS(0);
+    setINP(0);
     setFCP(0);
     setLCP(0);
     setReportSent(false);
@@ -67,7 +68,7 @@ export function WebVitals({ noReport }: { noReport?: boolean }) {
         render,
         complexity,
         time: 0,
-        cls: CLS,
+        inp: INP,
         fcp: FCP,
         lcp: LCP,
         cached,
@@ -78,12 +79,14 @@ export function WebVitals({ noReport }: { noReport?: boolean }) {
           ? "This page was previously cached"
           : "This page was not cached",
       });
-      const { error } = await supabase.from("loads").insert(loadData);
-      if (error) throw error;
+      if (FCP < 1500) {
+        const { error } = await supabase.from("loads").insert(loadData);
+        if (error) throw error;
+      }
       setReportSent(true);
     }
     getTime();
-  }, [CLS, FCP, LCP]);
+  }, [INP, FCP, LCP]);
 
   return null;
 }

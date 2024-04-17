@@ -4,7 +4,7 @@ export default function CompareChart({ data1 }: { data1: Load[] }) {
   if (!data1.length) return "data not found";
   const fcp = data1.map((load, index) => ({ goal: load.fcp, index }));
   const lcp = data1.map((load, index) => ({ goal: load.lcp, index }));
-  const cls = data1.map((load, index) => ({ goal: load.cls, index }));
+  const inp = data1.map((load, index) => ({ goal: load.inp, index }));
   const method = data1[0].method;
   const render = data1[0].render;
   const complexity = data1[0].complexity;
@@ -62,7 +62,7 @@ export default function CompareChart({ data1 }: { data1: Load[] }) {
       </h3>
       <div className="h-[60vh] w-[40vw]">
         <ResponsiveContainer width="100%">
-          <BarChart data={cls}>
+          <BarChart data={inp}>
             <Bar
               dataKey="goal"
               style={

@@ -51,29 +51,29 @@ export default function CompareResults() {
   const longestLCP = longestLCP1 > longestLCP2 ? data1 : data2;
   const shortestLCP = shortestLCP1 < shortestLCP2 ? data1 : data2;
 
-  const averageCLS1 =
-    data1.reduce((sum, item) => (item.cls ? sum + item.cls : sum), 0) /
+  const averageINP1 =
+    data1.reduce((sum, item) => (item.inp ? sum + item.inp : sum), 0) /
     data1.length;
-  const averageCLS2 =
-    data2.reduce((sum, item) => (item.cls ? sum + item.cls : sum), 0) /
+  const averageINP2 =
+    data2.reduce((sum, item) => (item.inp ? sum + item.inp : sum), 0) /
     data2.length;
 
-  const fastestCLS = averageCLS1 < averageCLS2 ? data1 : data2;
+  const fastestINP = averageINP1 < averageINP2 ? data1 : data2;
 
-  const longestCLS1 = data1.reduce((max, item) => Math.max(max, item.time), 0);
-  const longestCLS2 = data2.reduce((max, item) => Math.max(max, item.time), 0);
+  const longestINP1 = data1.reduce((max, item) => Math.max(max, item.time), 0);
+  const longestINP2 = data2.reduce((max, item) => Math.max(max, item.time), 0);
 
-  const shortestCLS1 = data1.reduce(
+  const shortestINP1 = data1.reduce(
     (min, item) => Math.min(min, item.time),
     Infinity,
   );
-  const shortestCLS2 = data2.reduce(
+  const shortestINP2 = data2.reduce(
     (min, item) => Math.min(min, item.time),
     Infinity,
   );
 
-  const longestCLS = longestCLS1 > longestCLS2 ? data1 : data2;
-  const shortestCLS = shortestCLS1 < shortestCLS2 ? data1 : data2;
+  const longestINP = longestINP1 > longestINP2 ? data1 : data2;
+  const shortestINP = shortestINP1 < shortestINP2 ? data1 : data2;
 
   return (
     <div className="grid w-full grid-cols-3 gap-4">
@@ -161,41 +161,41 @@ export default function CompareResults() {
 
       <div className="flex flex-col gap-2 rounded-lg border border-zinc-700 p-4 transition hover:border-zinc-200">
         <h3 className="flex whitespace-nowrap">
-          Lowest Avg CLS:{" "}
-          <span className="font-bold">{`${fastestCLS[0].method}/${fastestCLS[0].render}/${fastestCLS[0].complexity}`}</span>
+          Lowest Avg INP:{" "}
+          <span className="font-bold">{`${fastestINP[0].method}/${fastestINP[0].render}/${fastestINP[0].complexity}`}</span>
         </h3>
         <p>
           Value:{" "}
           <span className="font-bold">
-            {fastestCLS === data1 ? averageCLS1 : averageCLS2}
+            {fastestINP === data1 ? averageINP1 : averageINP2}
           </span>
         </p>
       </div>
       <div className="flex flex-col gap-2 rounded-lg border border-zinc-700 p-4 transition hover:border-zinc-200">
         <h3 className="flex whitespace-nowrap">
-          Largest CLS:{" "}
+          Largest INP:{" "}
           <span className="font-bold">
             {" "}
-            {`${longestCLS[0].method}/${longestCLS[0].render}/${longestCLS[0].complexity}`}{" "}
+            {`${longestINP[0].method}/${longestINP[0].render}/${longestINP[0].complexity}`}{" "}
           </span>
         </h3>
         <p>
           Value:{" "}
           <span className="font-bold">
-            {longestCLS === data1 ? longestCLS1 : longestCLS2}
+            {longestINP === data1 ? longestINP1 : longestINP2}
           </span>
         </p>
       </div>
       <div className="flex flex-col gap-2 rounded-lg border border-zinc-700 p-4 transition hover:border-zinc-200">
         <h3 className="flex whitespace-nowrap">
-          Lowest CLS:{" "}
-          <span className="font-bold">{`${shortestCLS[0].method}/${shortestCLS[0].render}/${shortestCLS[0].complexity}`}</span>
+          Lowest INP:{" "}
+          <span className="font-bold">{`${shortestINP[0].method}/${shortestINP[0].render}/${shortestINP[0].complexity}`}</span>
         </h3>
         <p>
           Value:{" "}
           <span className="font-bold">
             {" "}
-            {shortestCLS === data1 ? shortestCLS1 : shortestCLS2}
+            {shortestINP === data1 ? shortestINP1 : shortestINP2}
           </span>
         </p>
       </div>

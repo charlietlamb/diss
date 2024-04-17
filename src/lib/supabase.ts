@@ -54,11 +54,11 @@ export type Database = {
       loads: {
         Row: {
           cached: boolean | null
-          cls: number | null
           complexity: string
           created_at: string
           fcp: number | null
           id: string
+          inp: number | null
           lcp: number | null
           method: string
           render: string
@@ -66,11 +66,11 @@ export type Database = {
         }
         Insert: {
           cached?: boolean | null
-          cls?: number | null
           complexity?: string
           created_at?: string
           fcp?: number | null
           id?: string
+          inp?: number | null
           lcp?: number | null
           method?: string
           render?: string
@@ -78,11 +78,11 @@ export type Database = {
         }
         Update: {
           cached?: boolean | null
-          cls?: number | null
           complexity?: string
           created_at?: string
           fcp?: number | null
           id?: string
+          inp?: number | null
           lcp?: number | null
           method?: string
           render?: string
