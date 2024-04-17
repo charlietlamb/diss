@@ -14,8 +14,9 @@ import { useEffect, useState } from "react";
 import { strings } from "../compare/data/compareData";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Developer from "../developer/Developer";
-export default function Results({ loadData }: { loadData: Load[] }) {
+export default function Results() {
   const supabase = createClientComponentClient();
+  const [loadData, setLoadData] = useState<Load[]>([]);
   const initFcp = loadData.map((load, index) => ({ goal: load.fcp, index }));
   const [fcp, setFcp] = useState(initFcp);
   const initLcp = loadData.map((load, index) => ({ goal: load.lcp, index }));
@@ -27,6 +28,20 @@ export default function Results({ loadData }: { loadData: Load[] }) {
   const [render, setRender] = useState(pathname.split("/")[3]);
   const [complexity, setComplexity] = useState(pathname.split("/")[4]);
   const [path, setPath] = useState<string>(`${method}/${render}/${complexity}`);
+
+  useEffect(() => {
+    async function getData() {
+      const { data, error } = await supabase
+        .from("loads")
+        .select()
+        .eq("method", "form")
+        .eq("render", "client")
+        .eq("complexity", "simple");
+      if (error) throw error;
+      setLoadData(data);
+    }
+    getData();
+  }, []);
 
   useEffect(() => {
     async function getData() {
@@ -55,6 +70,7 @@ export default function Results({ loadData }: { loadData: Load[] }) {
     }
     getData();
   }, [path]);
+  if (!render || !method || !complexity) return null;
   return (
     <div className="relative z-10 flex h-full w-full flex-grow flex-col items-center justify-center gap-y-8 bg-black">
       <div className="flex flex-col gap-8 py-16">
