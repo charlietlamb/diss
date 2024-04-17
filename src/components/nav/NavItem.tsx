@@ -25,14 +25,14 @@ export default function NavItem({ text, href }: NavItemProps) {
       {href.includes("/app/") ? (
         <div
           onClick={() => (window.location.href = href)}
-          className="bg-gradient-to-b from-zinc-100 to-zinc-400 bg-clip-text text-center text-lg font-bold text-transparent decoration-2 hover:underline"
+          className="cursor-pointer bg-gradient-to-b from-zinc-100 to-zinc-400 bg-clip-text text-center text-lg font-bold text-transparent decoration-2 hover:underline"
         >
           {text}
         </div>
       ) : (
         <button
           onClick={() => (window.location.href = href)}
-          className="bg-gradient-to-b from-zinc-100 to-zinc-400 bg-clip-text text-center text-lg font-bold text-transparent decoration-2 hover:underline"
+          className="cursor-pointer bg-gradient-to-b from-zinc-100 to-zinc-400 bg-clip-text text-center text-lg font-bold text-transparent decoration-2 hover:underline"
         >
           {text}
         </button>

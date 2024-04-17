@@ -29,7 +29,7 @@ export function WebVitals({ noReport }: { noReport?: boolean }) {
         console.error("Invalid JSON:", cookieStr);
       }
     }
-
+    console.log(jsonMap);
     if (jsonMap.hasOwnProperty(path)) {
       if (jsonMap[path] > 1) setCached(true);
       jsonMap[path]++;
