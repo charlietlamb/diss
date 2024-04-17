@@ -30,12 +30,12 @@ export default function NavItem({ text, href }: NavItemProps) {
           {text}
         </div>
       ) : (
-        <Link
-          href={href}
+        <button
+          onClick={() => (window.location.href = href)}
           className="bg-gradient-to-b from-zinc-100 to-zinc-400 bg-clip-text text-center text-lg font-bold text-transparent decoration-2 hover:underline"
         >
           {text}
-        </Link>
+        </button>
       )}
     </div>
   );
