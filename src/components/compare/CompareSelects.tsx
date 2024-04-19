@@ -46,6 +46,9 @@ export default function CompareSelects() {
   useEffect(() => {
     setCompareData(supabase, value2, setData2, !cache ? null : data2Cached);
   }, [value2, data2Cached, cache]);
+
+  const data1Submit = data1[0]?.method === "submit";
+  const data2Submit = data2[0]?.method === "submit";
   return (
     <div className="flex gap-4 p-4">
       <div className="flex w-full gap-2">
@@ -63,7 +66,7 @@ export default function CompareSelects() {
             </SelectGroup>
           </SelectContent>
         </Select>
-        {cache && (
+        {!data1Submit && cache && (
           <ActionTooltip label={!data1Cached ? "Cached?" : "Not Cached?"}>
             <Toggle
               onClick={() => setData1Cached(!data1Cached)}
@@ -89,7 +92,7 @@ export default function CompareSelects() {
             </SelectGroup>
           </SelectContent>
         </Select>
-        {cache && (
+        {!data2Submit && cache && (
           <ActionTooltip label={!data2Cached ? "Cached?" : "Not Cached?"}>
             <Toggle
               onClick={() => setData2Cached(!data2Cached)}

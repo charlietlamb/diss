@@ -57,8 +57,8 @@ export type Database = {
           complexity: string
           created_at: string
           fcp: number | null
+          fid: number | null
           id: string
-          inp: number | null
           lcp: number | null
           method: string
           render: string
@@ -69,8 +69,8 @@ export type Database = {
           complexity?: string
           created_at?: string
           fcp?: number | null
+          fid?: number | null
           id?: string
-          inp?: number | null
           lcp?: number | null
           method?: string
           render?: string
@@ -81,8 +81,8 @@ export type Database = {
           complexity?: string
           created_at?: string
           fcp?: number | null
+          fid?: number | null
           id?: string
-          inp?: number | null
           lcp?: number | null
           method?: string
           render?: string

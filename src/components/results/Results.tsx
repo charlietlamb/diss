@@ -21,33 +21,21 @@ export default function Results() {
   const [fcp, setFcp] = useState(initFcp);
   const initLcp = loadData.map((load, index) => ({ goal: load.lcp, index }));
   const [lcp, setLcp] = useState(initLcp);
-  const initInp = loadData.map((load, index) => ({ goal: load.inp, index }));
-  const [inp, setInp] = useState(initInp);
-  const pathname = usePathname();
-  const [method, setMethod] = useState(pathname.split("/")[2]);
-  const [render, setRender] = useState(pathname.split("/")[3]);
-  const [complexity, setComplexity] = useState(pathname.split("/")[4]);
-  const [path, setPath] = useState<string>(`${method}/${render}/${complexity}`);
+  const initFid = loadData.map((load, index) => ({ goal: load.fid, index }));
+  const [fid, setFid] = useState(initFid);
+  const [init, setInit] = useState(false);
+  const [method, setMethod] = useState("");
+  const [render, setRender] = useState("");
+  const [complexity, setComplexity] = useState("");
+  const [path, setPath] = useState<string>(`form/client/simple`);
 
   useEffect(() => {
     async function getData() {
-      const { data, error } = await supabase
-        .from("loads")
-        .select()
-        .eq("method", "form")
-        .eq("render", "client")
-        .eq("complexity", "simple");
-      if (error) throw error;
-      setLoadData(data);
-    }
-    getData();
-  }, []);
+      const newMethod = init ? path.split("/")[0] : "form";
+      const newRender = init ? path.split("/")[1] : "client";
+      const newComplexity = init ? path.split("/")[2] : "simple";
+      setInit(true);
 
-  useEffect(() => {
-    async function getData() {
-      const newMethod = path.split("/")[0];
-      const newRender = path.split("/")[1];
-      const newComplexity = path.split("/")[2];
       if (
         newMethod !== method ||
         newRender !== render ||
@@ -63,9 +51,14 @@ export default function Results() {
         setMethod(newMethod);
         setRender(newRender);
         setComplexity(newComplexity);
-        setFcp(data.map((load, index) => ({ goal: load.fcp, index })));
+        setFcp(
+          data.map((load, index) => ({
+            goal: method !== "submit" ? load.fcp : load.time,
+            index,
+          })),
+        );
         setLcp(data.map((load, index) => ({ goal: load.lcp, index })));
-        setInp(data.map((load, index) => ({ goal: load.inp, index })));
+        setFid(data.map((load, index) => ({ goal: load.fid, index })));
       }
     }
     getData();
@@ -95,72 +88,99 @@ export default function Results() {
           <h1 className="relative z-50 w-full bg-gradient-to-b from-zinc-300 to-zinc-400 bg-clip-text text-center text-6xl font-bold text-transparent">
             {`${render.slice(0, 1).toUpperCase() + render.slice(1)} Side ${method.slice(0, 1).toUpperCase() + method.slice(1)}: ${complexity.slice(0, 1).toUpperCase() + complexity.slice(1)}`}
           </h1>
-          <h2 className="font-xl text-zinc-400">
-            24 randomly generated values
-          </h2>
         </div>
-        <h3 className="text-4xl font-bold text-zinc-200">
-          First Contentful Paint
-        </h3>
-        <div className="h-[60vh] w-[80vw]">
-          <ResponsiveContainer width="100%">
-            <BarChart data={fcp}>
-              <Bar
-                dataKey="goal"
-                style={
-                  {
-                    fill: "#E4E4E7",
-                    opacity: 0.9,
-                  } as React.CSSProperties
-                }
-              />
-              <XAxis dataKey="index" />
-              <YAxis />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        <h3 className="text-4xl font-bold text-zinc-200">
-          Largest Contentful Paint
-        </h3>
-        <div className="h-[60vh] w-[80vw]">
-          <ResponsiveContainer width="100%">
-            <BarChart data={lcp}>
-              <Bar
-                dataKey="goal"
-                style={
-                  {
-                    fill: "#E4E4E7",
-                    opacity: 0.9,
-                  } as React.CSSProperties
-                }
-              />
-              <XAxis dataKey="index" />
-              <YAxis />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        <h3 className="text-4xl font-bold text-zinc-200">
-          Cumulative Layout Shift
-        </h3>
-        <div className="h-[60vh] w-[80vw]">
-          <ResponsiveContainer width="100%">
-            <BarChart data={inp}>
-              <Bar
-                dataKey="goal"
-                style={
-                  {
-                    fill: "#E4E4E7",
-                    opacity: 0.9,
-                  } as React.CSSProperties
-                }
-              />
-              <XAxis dataKey="index" />
-              <YAxis />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        {method !== "submit" ? (
+          <>
+            {" "}
+            <h3 className="text-4xl font-bold text-zinc-200">
+              First Contentful Paint
+            </h3>
+            <div className="h-[60vh] w-[80vw]">
+              <ResponsiveContainer width="100%">
+                <BarChart data={fcp}>
+                  <Bar
+                    dataKey="goal"
+                    style={
+                      {
+                        fill: "#E4E4E7",
+                        opacity: 0.9,
+                      } as React.CSSProperties
+                    }
+                  />
+                  <XAxis dataKey="index" />
+                  <YAxis />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <h3 className="text-4xl font-bold text-zinc-200">
+              Largest Contentful Paint
+            </h3>
+            <div className="h-[60vh] w-[80vw]">
+              <ResponsiveContainer width="100%">
+                <BarChart data={lcp}>
+                  <Bar
+                    dataKey="goal"
+                    style={
+                      {
+                        fill: "#E4E4E7",
+                        opacity: 0.9,
+                      } as React.CSSProperties
+                    }
+                  />
+                  <XAxis dataKey="index" />
+                  <YAxis />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <h3 className="text-4xl font-bold text-zinc-200">
+              Cumulative Layout Shift
+            </h3>
+            <div className="h-[60vh] w-[80vw]">
+              <ResponsiveContainer width="100%">
+                <BarChart data={fid}>
+                  <Bar
+                    dataKey="goal"
+                    style={
+                      {
+                        fill: "#E4E4E7",
+                        opacity: 0.9,
+                      } as React.CSSProperties
+                    }
+                  />
+                  <XAxis dataKey="index" />
+                  <YAxis />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </>
+        ) : (
+          <>
+            <h3 className="text-4xl font-bold text-zinc-200">Submit Time</h3>
+            <div className="h-[60vh] w-[80vw]">
+              <ResponsiveContainer width="100%">
+                <BarChart data={fcp}>
+                  <Bar
+                    dataKey="goal"
+                    style={
+                      {
+                        fill: "#E4E4E7",
+                        opacity: 0.9,
+                      } as React.CSSProperties
+                    }
+                  />
+                  <XAxis dataKey="index" />
+                  <YAxis />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </>
+        )}
         <h3 className="text-4xl font-bold text-zinc-200">Developer Feedback</h3>
-        <Developer addText inline initKey={path} />
+        <Developer
+          addText
+          inline
+          initKey={`${method !== "submit" ? method : "form"}/${render}/${complexity}`}
+        />{" "}
       </div>
     </div>
   );

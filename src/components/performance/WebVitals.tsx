@@ -40,19 +40,21 @@ export function WebVitals({ noReport }: { noReport?: boolean }) {
     setCookie("str", JSON.stringify(jsonMap));
   }, [path]);
   useReportWebVitals((metric) => {
-    console.log(metric);
-    if (metric.name === "INP") setINP(metric.value);
+    if (metric.name === "FID") {
+      console.log(metric);
+      setFID(metric.value);
+    }
     if (metric.name === "FCP") setFCP(metric.value);
     if (metric.name === "LCP") setLCP(metric.value);
   });
   const supabase = createClientComponentClient<Database>();
   const [init, setInit] = useState(false);
-  const [INP, setINP] = useState(0);
+  const [FID, setFID] = useState(0);
   const [FCP, setFCP] = useState(0);
   const [LCP, setLCP] = useState(0);
   const [reportSent, setReportSent] = useState(false);
   useEffect(() => {
-    setINP(0);
+    setFID(0);
     setFCP(0);
     setLCP(0);
     setReportSent(false);
@@ -62,13 +64,14 @@ export function WebVitals({ noReport }: { noReport?: boolean }) {
     async function getTime() {
       if (!init) return setInit(true);
       if (reportSent) return;
-      if (!(FCP && LCP && INP)) return;
+      if (!(FCP && LCP && FID)) return;
+      console.log("Sending report");
       const loadData = {
         method,
         render,
         complexity,
         time: 0,
-        inp: INP,
+        fid: FID,
         fcp: FCP,
         lcp: LCP,
         cached,
@@ -86,7 +89,7 @@ export function WebVitals({ noReport }: { noReport?: boolean }) {
       setReportSent(true);
     }
     getTime();
-  }, [INP, FCP, LCP]);
+  }, [FID, FCP, LCP]);
 
   return null;
 }

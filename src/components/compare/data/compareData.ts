@@ -1,5 +1,5 @@
 export const compareData = {
-  methods: ["form", "charts", "data"],
+  methods: ["form", "charts", "data", "submit"],
   renders: ["client", "server"],
   complexity: ["simple", "average", "complex"],
 };
