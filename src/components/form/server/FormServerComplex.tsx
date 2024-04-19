@@ -22,7 +22,7 @@ export default async function FormServerAverage() {
     const loadData = {
       method: "submit",
       render: "server",
-      complexity: "simple",
+      complexity: "complex",
       time: timeTaken,
       cached: false,
     };
