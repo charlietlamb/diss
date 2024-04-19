@@ -16,16 +16,16 @@ const submitForm1 = async (formData: FormData) => {
     type: "server",
   });
   if (error) throw error;
-  await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/toast`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      time: performance.now() - startTime,
-      key: "submit/server/simple",
-    }),
-  });
+  const timeTaken = performance.now() - startTime;
+  const loadData = {
+    method: "submit",
+    render: "server",
+    complexity: "simple",
+    time: timeTaken,
+    cached: false,
+  };
+  const { error: submitError } = await supabase.from("loads").insert(loadData);
+  if (submitError) throw submitError;
 };
 
 export default async function FormServerSimple() {

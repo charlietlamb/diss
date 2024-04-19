@@ -18,16 +18,18 @@ export default async function FormServerAverage() {
       type: "server",
     });
     if (error) throw error;
-    await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/toast`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        time: performance.now() - startTime,
-        key: "submit/server/complex",
-      }),
-    });
+    const timeTaken = performance.now() - startTime;
+    const loadData = {
+      method: "submit",
+      render: "server",
+      complexity: "simple",
+      time: timeTaken,
+      cached: false,
+    };
+    const { error: submitError } = await supabase
+      .from("loads")
+      .insert(loadData);
+    if (submitError) throw submitError;
   }
   return (
     <div className="relative z-50 flex  flex-grow  flex-col gap-y-4 overflow-y-auto rounded-lg px-4 py-8">
