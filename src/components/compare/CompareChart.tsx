@@ -1,7 +1,8 @@
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import Developer from "../developer/Developer";
 export default function CompareChart({ data1 }: { data1: Load[] }) {
-  if (!data1.length) return "data not found";
+  if (!data1.length)
+    return <p className="w-full text-center">Data not found</p>;
   const method = data1[0].method;
   const render = data1[0].render;
   const complexity = data1[0].complexity;
