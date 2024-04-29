@@ -6,6 +6,7 @@ import StoreProvider from "@/state/StoreProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { WebVitals } from "@/components/performance/WebVitals";
+import CookieConsent from "./CookieConsent";
 
 export const metadata: Metadata = {
   title: "Charlie Lamb's Project",
@@ -32,6 +33,7 @@ export default function RootLayout({
               <NavBar></NavBar>
               {children}
               <Toaster />
+              <CookieConsent />
               {/* <WebVitals noReport /> */}
             </div>
           </ThemeProvider>
