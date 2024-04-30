@@ -64,7 +64,7 @@ export const appData: AppData[] = [
     title: "Results",
     description:
       "View previous results when comparing client, server and hybrid methods.",
-    href: "/results/form",
+    href: "/results",
     header: (
       <div className="flex h-full flex-col justify-center">
         <EvervaultCard text="hover" />
